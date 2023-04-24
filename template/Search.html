@@ -1,0 +1,68 @@
+<DOCTYPE html>
+
+    <head>
+
+
+    </head>
+
+    <body>
+
+        <h1>
+
+            This is a Search Box
+
+        </h1>
+
+
+        <p>____________</p>
+        <form id="searchform" method="get" action="" accept-charset="utf-8">
+            Search destination:
+            <input autofocus onfocus="this.select()" onmouseup='return false' id="searchbox" name="search_res" type="text" placeholder="Search">
+            <input type="submit" value="OK">
+        </form>
+        <!--
+                <tr>
+                    <th scope="col"> # </th>
+                    <th scope="col"> Name </th>
+                    <th scope="col"> Qty </th>
+    -->
+               
+            
+        <p>select "name" as bar_label, count(*) as bar_quantity from it_asset_parts.it_parts as results group by "name" order by bar_quantity  desc</p>
+
+            <div class="container">
+                <div class="row mt-4">
+                    <div class="col">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col"> # </th>
+                                    <th scope="col"> Name </th>
+                                    <th scope="col"> Qty </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for Parts_View in Parts_View %}
+                                <tr>
+                                    <th scope="row">
+                                        {{
+     Parts_View.part_id
+                                        }}
+                                    </th>
+                                    <th scope="row"> {{ Parts_View.name }} </th>
+                                    <th scope="row"> {{ Parts_View.qty }} </th>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </body>
+
+    </DOCTYPE>
+

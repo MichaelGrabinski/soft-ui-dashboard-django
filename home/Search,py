@@ -1,0 +1,11 @@
+from django.contrib import Search
+
+# Register your models here.
+class IT_Parts(models.Model):
+    Part_ID = models.IntegerField()
+    Name = models.CharField(max_length=255)
+    Location_ID = models.IntegerField()
+    Barcode_Rm = models.CharField(max_length=255)
+    Barcode_Add = models.CharField(max_length=255)
+    Qty = models.IntegerField()
+    Manufacturer_ID = models.IntegerField()
