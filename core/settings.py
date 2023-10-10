@@ -13,6 +13,17 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os, random, string
 from pathlib import Path
 from dotenv import load_dotenv
+import sys
+
+
+SESSION_SAVE_EVERY_REQUEST = True
+
+SESSION_COOKIE_AGE = 900  # 5 minutes in seconds
+SESSION_EXPIRE_SECONDS = 900  # 5 minutes in seconds
+   
+
+
+sys.path.append('/soft-ui-dashboard-django')
 
 load_dotenv()  # take environment variables from .env.
 
@@ -30,7 +41,7 @@ if not SECRET_KEY:
 # Render Deployment Code
 DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:    
@@ -48,6 +59,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "home",
     "debug_toolbar",
+#    "core",
 ]
 
 MIDDLEWARE = [
@@ -60,6 +72,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
    # "auditlog.middleware.AuditlogMiddleware",
   #  "audit_log.middleware.UserLoggingMiddleware",
 ]
@@ -101,11 +114,12 @@ DATABASES = {
       'default': {
         #'ENGINE'  : 'django.db.backends.' + DB_ENGINE,
         'ENGINE'  : 'django.db.backends.mysql',
-        'NAME'    : 'it_asset_parts',
-        'HOST'    : '127.0.0.1',
+        'NAME'    : 'Fees',
+# 'NAME'    : 'it_asset_parts',
+        'HOST'    : 'localhost',
         'PORT'    : '3306',
-        'USER'    : 'root',
-        'PASSWORD': 'D3lt@',
+        'USER'    : 'Test',
+        'PASSWORD': 'DevOps1234',
         } 
 #else:
 #    DATABASES = {
@@ -151,6 +165,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #if not DEBUG:
 #    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -160,7 +175,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'Home'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 INTERNAL_IPS = [
@@ -168,4 +183,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
     # ...
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = "/media/"
 

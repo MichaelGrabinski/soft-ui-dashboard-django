@@ -1,7 +1,8 @@
+{% load static %}
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Dashboard Builder</title>
+    <title>Inventory</title>
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-icons.css">
     <link rel="stylesheet" href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-svg.css">
@@ -9,22 +10,155 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
     <link rel="stylesheet" href="./assets/css/loopple/loopple.css">
     <link rel="icon" type="image/x-icon" href="C:/Users/grabinski.ma/Source/repos/soft-ui-dashboard-django/img/EPHS_Logo.png">
+    
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+   <style>
+  .mobile-only {
+    display: none;
+}
+  
+  .name-col {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table th, .table td {
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .messages {
+    list-style-type: none;
+    padding: 10px;
+}
+
+  .messages li {
+    font-weight: bold;
+}
+
+
+  /* Hide ID, barcode, and location columns on mobile */
+  @media screen and (max-width: 767px) {
+    .table th:nth-child(1), .table td:nth-child(1),
+    .table th:nth-child(4), .table td:nth-child(4),
+    .table th:nth-child(5), .table td:nth-child(5) {
+      display: none;
+    }
+  }
+    /* Shrink text for all columns */
+  @media screen and (max-width: 767px) {
+    .table th, .table td {
+      font-size: 14px;
+    }
+    /* Set name column width to 50% on mobile */
+    .table th.name-col, .table td.name-col {
+      width: 50%;
+      box-sizing: border-box;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+
+    }
+    
+    .table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  }
+
+  
+@media (max-width: 768px) {
+  .removable {
+    display: none;
+  }
+  .mobile-only {
+    display: block;
+  }
+  .table {
+    position: relative;
+    }
+  .name-col {
+    max-width: calc(100% - 80px); /* Adjust the value as needed */
+    }
+}
+
+}
+</style>
+    
+        <script>
+        function toggleSort(column) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentOrder = urlParams.get('order') || 'asc';
+            const newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
+            urlParams.set('sort', column);
+            urlParams.set('order', newOrder);
+            window.location.search = urlParams.toString();
+        }
+    </script>
+    
+    {% if request.user.is_authenticated %}
+<script>
+    // Calculate the time remaining for the session to expire in milliseconds
+    var sessionExpiryDate = new Date("{{ request.session.get_expiry_date|date:'c' }}");
+    var currentTime = new Date();
+    var timeRemaining = sessionExpiryDate - currentTime;
+
+    // Set a timer to refresh the page when the session expires
+    setTimeout(function () {
+        location.reload();
+    }, timeRemaining);
+</script>
+{% endif %}
+    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+
 </head>
 
-<body class="g-sidenav-show">
+<body class="g-sidenav-show" style="overflow-x: hidden;">
+
+
+{% if messages %}
+    <script>
+        window.onload = function() {
+            {% for message in messages %}
+                var messageText = "{{ message }}";
+                var messageElement = document.createElement('div');
+                messageElement.innerHTML = messageText;
+                var decodedMessage = messageElement.textContent || messageElement.innerText || '';
+                alert(decodedMessage);
+            {% endfor %}
+        };
+    </script>
+{% endif %}
+
+  
+  
     <nav class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start position-absolute ms-3 bg-white" id="sidenav-main">
         <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute right-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-            <a class="navbar-brand m-0" href="javascript:;">
-                <img src="https://demos.creative-tim.com/soft-ui-dashboard/assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="...">
-                <span class="ms-1 font-weight-bold">EHPS Inventory</span>
+            <a class="navbar-brand m-0" href="javascript::">
+                
+                <img src="media/EPHS_Logo.png" alt="home" width="75px" />
+               
+                <!--<img src="https://demos.creative-tim.com/soft-ui-dashboard/assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="...">-->
+                <span class="nav-link-text ms-1">EHPS Inventory</span>
             </a>
         </div>
         <hr class="horizontal dark mt-0">
         <div class="collapse navbar-collapse  w-auto" id="sidenav-collapse-main">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link  active" href="C:/Users/grabinski.ma/source/repos/soft-ui-dashboard-django/img/EHPS_Logo.png">
+                    <a class="nav-link  active" href="http://devops.ehps.org:7001">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>shop </title>
@@ -44,7 +178,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link  active" href="C:/Users/grabinski.ma/source/repos/soft-ui-dashboard-django/img/EHPS_Logo.png">
+                    <a class="nav-link  active" href="http://devops.ehps.org:7001/Search">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>shop </title>
@@ -60,12 +194,12 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Auditing - Coming Soon</span>
+                        <span class="nav-link-text ms-1">Auditing</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link  active" href="C:/Users/grabinski.ma/source/repos/soft-ui-dashboard-django/img/EHPS_Logo.png">
+                    <a class="nav-link  active" href="https://eh.analyticvue.com/Home">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>shop </title>
@@ -81,7 +215,7 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Anaylsis - Coming Soon</span>
+                        <span class="nav-link-text ms-1">Anaylsis</span>
                     </a>
                 </li>
 
@@ -96,63 +230,113 @@
     <div class="main-content" id="panel">
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 mt-3 shadow-none border-radius-xl" id="navbarTop">
             <div class="container-fluid">
+                
+                 <img src="media/EPHS_Logo.png" alt="home" width="115px" />
+                
                 <a class="navbar-brand" href="" rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom" target="_blank">
-                    East Hartford Public Schools Information Technology Inventory
+                   Information Technology Inventory
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navigation">
-                    <ul class="navbar-nav navbar-nav-hover ms-auto">
+              <div class="collapse navbar-collapse" id="navigation">
+                     <ul class="navbar-nav navbar-nav-hover ms-auto">
                         <div class="row">
                             <div class="col-auto m-auto">
                                 <a class="cursor-pointer">
-                                    <i class="fa fa-cog fixed-plugin-button-nav" aria-hidden="true"></i>
+                       <!--              <i class="fa fa-cog fixed-plugin-button-nav" aria-hidden="true"></i>-->
                                 </a>
                             </div>
                             <div class="col-auto m-auto">
                                 <div class="dropdown">
                                     <a class="cursor-pointer" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-bell" aria-hidden="true"></i>
+                            <!--              <i class="fa fa-bell" aria-hidden="true"></i>-->
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-right px-2 py-3 ms-n4" aria-labelledby="dropdownMenuButton">
                                         ...
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-auto">
-                                <div class="bg-white border-radius-lg d-flex me-2">
-                                    <input type="text" class="form-control border-0 ps-3" placeholder="Type here...">
-                                    <button class="btn bg-gradient-primary my-1 me-1">Search</button>
-                                </div>
-                            </div>
-                        </div>
+<div class="col-auto">
+    <div class="bg-white border-radius-lg d-flex me-2">
+        {% if request.user.is_authenticated %}
+            <span class="m-auto">Welcome, {{ request.user.username }}! &nbsp;&nbsp;&nbsp;&nbsp;   {{ request.user.last_name }}</span>
+          <!--  <form method="POST" action="{% url 'logout' %}" class="m-auto">
+                {% csrf_token %}
+                <button type="submit" class="btn bg-gradient-primary my-1 me-1">Logout</button>
+            </form> -->
+     <form id="logout-form" method="POST" action="{% url 'logout' %}" class="m-auto">
+    {% csrf_token %}
+    <button id="logout-button" type="button" class="btn bg-gradient-primary my-1 me-1">Logout</button>
+</form>       
+
+
+            
+        {% else %}
+            <form method="POST" action="{% url 'login' %}" class="m-auto">
+                {% csrf_token %}
+             <!--   <label for="barcode">Barcode:</label>
+                <input type="text" class="form-control border-0 ps-3" id="barcode" name="barcode"> -->
+                <button type="submit" class="btn bg-gradient-primary my-1 me-1">Login</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+
+ {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+                        </div> 
                     </ul>
                 </div>
             </div>
         </nav>
+    
         <div class="container-fluid pt-3">
             <div class="row removable">
-                <div class="col-lg-6">
+                <div class="col-lg-6" class="table-responsive">
+                   
+                   
+                   
+                   
+                   <div class="row removable">
                     <div class="card p-3 mb-4">
                         <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100" style="background-image: url(https://demos.creative-tim.com/soft-ui-dashboard/assets/img/ivancik.jpg);">
                             <span class="mask bg-gradient-dark"></span>
                             <div class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3">
                                 <h5 class="text-white font-weight-bolder mb-4 pt-2">Alert Dashlet</h5>
-                                <p class="text-white">Breaking New!! Michael has done the impossible and recreated an entire inventory system for EHPS.</p>
-                                <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="javascript:;">
-                                    Read More
+                                <p class="text-white">Welcome to EHPS IT's new inventory system for Parts. Click below to find the instructions for this amazing new system!</p>
+                              <!--  <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="{% static '/files/Test.pdf' %}"> -->
+                                <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="media/Instruct.png"> 
+                                 
+                                    Click Here for Instructions
                                     <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
+                    
+                    </div>
+                    
+                    
+                    
+                    
 
                     <form id="searchform" method="get" action="" accept-charset="utf-8">
-                        Barcode:
-                        <input autofocus onfocus="this.select()" onmouseup='return false' id="searchbox" name="search_res" type="text" placeholder="Search">
+                       Enter Barcode:
+                        <input autofocus onfocus="this.select()" onmouseup='return false' id="searchbox" name="search_res" type="text" placeholder="  Scan">
                         <!--<input type="submit" value="OK">-->
                     </form>
+                    
+                 
+                     <div class="mobile-only">                  
+<button onclick="scanBarcode()" class="btn bg-gradient-primary my-1 me-1">Scan Barcode</button>
+<div id="barcode-scanner" style="width: 100%; height: 300px;"></div>
+</div>
 
                     <table class="table">
                         <thead class="thead-dark">
@@ -161,26 +345,74 @@
                                 <th scope="col"> # </th>
                                 <th scope="col"> Name </th>
                                 <th scope="col"> Qty </th>
+                                <th scope="col"> Location </th>
                             </tr>
                         </thead>
-                        <tbody style="position: relative; left: 15px;">
-                            {% for results in results %}
-                            <tr>
-                                <th scope="row"> {{results.part_id}} </th>
-                                <th scope="row"> {{results.name}} </th>
-                                <th scope="row"> {{results.qty}} </th>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tbody style="position: relative; left: 15px;">
-                            {% for results1 in results1 %}
-                            <tr>
-                                <th scope="row"> {{results1.part_id}} </th>
-                                <th scope="row"> {{results1.name}} </th>
-                                <th scope="row"> {{results1.qty}} </th>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
+                 
+                 
+                        
+<tbody style="position: relative; left: 15px;">
+    {% for part in results %}
+    <tr>
+        <th scope="row">{{ part.part_id }}</th>
+        <td>{{ part.name }}</td>
+        <td>
+            {{ part.qty|add:"-1" }}
+            {% if query_called %}
+            <div style="color: red;">-1</div>
+            {% endif %}
+        </td>
+        <td>{{ part.location_id }}</td>
+    </tr>
+    {% endfor %}
+    {% for part in results1 %}
+    <tr>
+        <th scope="row">{{ part.part_id }}</th>
+        <td>{{ part.name }}</td>
+        <td>
+            {{ part.qty|add:"1" }}
+            {% if query_called %}
+            <div style="color: green;">+1</div>
+            {% endif %}
+        </td>
+        <td>{{ part.location_id }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+                        
+                        
+ <!-- 
+<tbody style="position: relative; left: 15px;">
+    {% for results1 in results1 %}
+    <tr>
+        <th scope="row"> {{results1.part_id}} </th>
+        <th scope="row"> {{results1.name}} </th>
+        <th scope="row">
+            {{results1.qty}}
+            {% if query_called %}
+            <div style="color: green;">+1</div>
+            {% endif %}
+        </th>
+        <th scope="row"> {{results1.location_id}} </th>
+    </tr>
+    {% endfor %}
+</tbody>
+
+<tbody style="position: relative; left: 15px;">
+    {% for results in results %}
+    <tr>
+        <th scope="row"> {{results.part_id}} </th>
+        <th scope="row"> {{results.name}} </th>
+        <th scope="row">
+            {{results.qty}}
+            {% if query_called %}
+            <div style="color: red;">-1</div>
+            {% endif %}
+        </th>
+        <th scope="row"> {{results.location_id}} </th>
+    </tr>
+    {% endfor %}
+</tbody> -->
                     </table>
 
                     <br>
@@ -188,65 +420,63 @@
 
                 </div>
                 <div class="col-lg-6">
-                    <div class="card mb-4">
-                        <div class="card-header pb-0">
-                            <h6>Under Development - Inventory Low Quantiy Alert</h6>
-                            <p class="text-sm">
-                                <i class="fa fa-arrow-up text-success" aria-hidden="true"></i>
-                                <span class="font-weight-bold">4% more</span> in 2023
-                            </p>
-                        </div>
-                        <div class="card-body p-3">
-                            <div class="chart">
-                                <div class="chartjs-size-monitor">
-                                    <div class="chartjs-size-monitor-expand">
-                                        <div class=""></div>
-                                    </div>
-                                    <div class="chartjs-size-monitor-shrink">
-                                        <div class=""></div>
-                                    </div>
-                                </div>
-                                <div class="chartjs-size-monitor">
-                                    <div class="chartjs-size-monitor-expand">
-                                        <div class=""></div>
-                                    </div>
-                                    <div class="chartjs-size-monitor-shrink">
-                                        <div class=""></div>
-                                    </div>
-                                </div>
-                                <canvas id="chart-line" class="chart-canvas chartjs-render-monitor" height="300" width="602" style="display: block; height: 300px; width: 602px; box-sizing: border-box;"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <div class="card-header pb-0">
+    <h6>Inventory Low Quantity Alert</h6>
+    <p class="text-sm">
+        <i class="fa fa-arrow-up text-success" aria-hidden="true"></i>
+        <span class="font-weight-bold">400% more</span> in 2023
+    </p>
+</div>
+<div class="card-body p-3">
+    <div class="chart">
+        <canvas id="chart-line" class="chart-canvas" height="300" width="602" style="display: block; height: 300px; width: 602px; box-sizing: border-box;"></canvas>
+    </div>
+</div>
+</div>
+</div>
+</div>
 
-            <table class="table">
-                <thead class="thead-dark">
+<!-- Search bar -->
+<input type="text" id="searchInput" placeholder="Search by name">
 
-                    <tr>
-                        <th scope="col"> # </th>
-                        <th scope="col"> Name </th>
-                        <th scope="col"> Qty </th>
-                        <th scope="col"> Location </th>
-                        <th scope="col"> Barcode </th>
-                        <th scope="col"> Manufacturer </th>
-                    </tr>
-                </thead>
+
+            <table class="table" id="myTable">
+<thead class="thead-dark">
+    <tr>
+            <th scope="col"> # </th>
+            <th scope="col" class="name-col">
+    <a href="#" onclick="toggleSort('name')" title="Sort by Name">Name</a>
+</th>
+<th scope="col" class="qty-col">
+    <a href="#" onclick="toggleSort('qty')" title="Sort by Qty">Qty</a>
+</th>
+            <th scope="col">
+                <a href="#" onclick="toggleSort('location')" title="Sort by Location">Location</a>
+            </th>
+            <th scope="col">
+                <a href="#" onclick="toggleSort('barcode')" title="Sort by Barcode">Barcode</a>
+            </th>
+            <th scope="col">
+                <a href="#" onclick="toggleSort('ShelfID')" title="Sort by ShelfID">Shelf ID</a>
+            </th>
+        
+    </tr>
+</thead>
                 <tbody style="position: relative; left: 15px;">
-                    {% for Parts_View in Parts_View %}
+                   {% for parts in parts %} 
                     <tr>
-                        <th scope="row"> {{ Parts_View.part_id }} </th>
-                        <th scope="row"> {{ Parts_View.name }} </th>
-                        <th scope="row"> {{ Parts_View.qty }} </th>
-                        <th scope="row"> {{ Parts_View.location_id }} </th>
-                        <th scope="row"> {{ Parts_View.barcode_rm }} </th>
-                        <th scope="row"> {{ Parts_View.manufacturer_id }} </th>
+                        <td scope="row"> {{ parts.part_id }} </td>
+                        <td scope="row" class="name-col"> {{ parts.name }} </td>
+                        <td scope="row" class="qty-col"> {{ parts.qty }} </td>
+                        <td scope="row"> {{ parts.location_id }} </td>
+                        <td scope="row"> {{ parts.barcode_rm }} </td>
+                        <td scope="row"> {{ parts.ShelfID }} </td>
+                       
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-
+<!--
 
             <div class="card mb-4">
                 <div class="card-body p-3">
@@ -380,6 +610,8 @@
             </div>
         </div>
 
+-->
+
         <footer class="footer pt-3 pb-4">
             <div class="container-fluid">
                 <div class="row align-items-center justify-content-lg-between">
@@ -401,7 +633,47 @@
     <script src="https://demos.creative-tim.com/soft-ui-dashboard/assets/js/plugins/chartjs.min.js"></script>
     <script src="https://demos.creative-tim.com/soft-ui-dashboard/assets/js/plugins/Chart.extension.js"></script>
     <script src="https://demos.creative-tim.com/soft-ui-dashboard/assets/js/soft-ui-dashboard.min.js?v=1.0.2"></script>
-    <script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>     const lowQuantityPartsData = JSON.parse('{{ low_quantity_parts_json|escapejs }}');
+    console.log('lowQuantityPartsData:', lowQuantityPartsData);</script>
+
+<script>
+// Extract the names and quantities of the low quantity parts
+const partNames = lowQuantityPartsData.map(part => part.name);
+const partQuantities = lowQuantityPartsData.map(part => part.qty);
+
+console.log('partNames:', partNames);
+console.log('partQuantities:', partQuantities);
+
+// Create the chart using Chart.js
+const ctx = document.getElementById('chart-line').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: partNames,
+        datasets: [{
+            label: 'Low Quantity Parts',
+            data: partQuantities,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true, // This makes the chart responsive
+        maintainAspectRatio: false, // This allows the chart to resize based on its container's size
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+
+    
+<script>
         if (document.querySelector("#chart-bars")) {
            	var ctx = document.getElementById("chart-bars").getContext("2d");
            	new Chart(ctx, {
@@ -568,5 +840,26 @@
             }); 
            };
     </script>
+   
+<script>
+$(document).ready(function() {
+  $("#searchInput").on("keyup", function() {
+    let value = $(this).val().toLowerCase();
+    $("#myTable tbody tr").each(function() {
+      let nameColumnText = $(this).find("td.name-col").text().toLowerCase();
+      if (nameColumnText.indexOf(value) > -1) {
+        $(this).show();
+      } else {
+        $(this).hide();
+      }
+    });
+  });
+});
+</script>
+<script>
+    document.getElementById('logout-button').addEventListener('click', function() {
+        document.getElementById('logout-form').submit();
+    });
+</script>
     <script src="./assets/js/loopple/loopple.js"></script>
 </body>
